@@ -92,7 +92,26 @@ public class PessoaServiceTest {
 	}
 	
 	@Test
-	@DisplayName("Deve atualizar uma pessoa")
+	@DisplayName("Deve chamar o método findById e retornar a Pessoa ao controlador")
+	public void findTest() {
+		// Cenário
+		long id = 2l;
+		
+		Pessoa pessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
+		
+		Mockito.doReturn(pessoa).when(pessoaService).findById(id);
+		
+		// Execução
+		PessoaDTO foundPessoa = pessoaService.find(id);
+		
+		// Verificação
+		Assertions.assertThat(foundPessoa.getId()).isEqualTo(id);
+		Assertions.assertThat(foundPessoa.getNome()).isEqualTo("Gustavo Silva Cruz");
+		Assertions.assertThat(foundPessoa.getDataDeNascimento()).isEqualTo(LocalDate.of(1996, 10, 17));
+	}
+	
+	@Test
+	@DisplayName("Deve atualizar uma Pessoa")
 	public void updatePessoaTest() {
 		// Cenário
 		Long id = 2l;

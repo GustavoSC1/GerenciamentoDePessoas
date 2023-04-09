@@ -25,6 +25,12 @@ public class PessoaService {
 		return new PessoaDTO(pessoa);		
 	}
 	
+	public PessoaDTO find(Long id) {		
+		Pessoa user = findById(id);
+		
+		return new PessoaDTO(user);
+	}
+	
 	public PessoaDTO update(Long id, PessoaNewDTO pessoaDto) {
 		Pessoa pessoa = findById(id);
 		

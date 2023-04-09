@@ -80,5 +80,26 @@ public class PessoaControllerTest {
 		.andExpect( MockMvcResultMatchers.status().isCreated() )
 		.andExpect( MockMvcResultMatchers.header().string(HttpHeaders.LOCATION, Matchers.containsString("/pessoas/"+id)));
 	}
+	
+	@Test	
+	@DisplayName("Deve lançar um erro de validação quando não há dados suficientes para a criação da pessoa")
+	public void saveInvalidPessoaTest() throws Exception {
+		// Cenário	
+		PessoaNewDTO newPessoa = new PessoaNewDTO();
+						
+		String json = mapper.writeValueAsString(newPessoa);
+		
+		// Execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.post(PESSOA_API)
+													.contentType(MediaType.APPLICATION_JSON)
+													.accept(MediaType.APPLICATION_JSON)
+													.content(json);		
+		
+		// Verificação
+		mvc.perform(request)
+					.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+					.andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(2)));
+	}
 
 }

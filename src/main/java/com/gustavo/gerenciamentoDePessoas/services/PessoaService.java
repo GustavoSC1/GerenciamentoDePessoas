@@ -1,7 +1,10 @@
 package com.gustavo.gerenciamentoDePessoas.services;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
+import com.gustavo.gerenciamentoDePessoas.services.exceptions.ObjectNotFoundException;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaNewDTO;
 import com.gustavo.gerenciamentoDePessoas.entities.Pessoa;
@@ -20,6 +23,14 @@ public class PessoaService {
 		Pessoa pessoa = new Pessoa(null, pessoaDto.getNome(), pessoaDto.getDataDeNascimento());
 		pessoa = pessoaRepository.save(pessoa);
 		return new PessoaDTO(pessoa);		
+	}
+	
+	public Pessoa findById(Long id) {
+		
+		Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
+		Pessoa pessoa = pessoaOptional.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id + ", Type: " + Pessoa.class.getName()));
+	
+		return pessoa;
 	}
 
 }

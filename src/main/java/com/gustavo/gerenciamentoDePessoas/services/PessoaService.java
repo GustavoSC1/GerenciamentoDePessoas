@@ -2,6 +2,7 @@ package com.gustavo.gerenciamentoDePessoas.services;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.gustavo.gerenciamentoDePessoas.services.exceptions.ObjectNotFoundException;
@@ -41,7 +42,7 @@ public class PessoaService {
 		
 		return new PessoaDTO(pessoa);
 	}
-	
+		
 	public Pessoa findById(Long id) {
 		
 		Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);

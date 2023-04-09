@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -90,6 +89,28 @@ public class PessoaServiceTest {
 		String actualMessage = exception.getMessage();
 		
 		Assertions.assertThat(actualMessage).isEqualTo(expectedMessage);			
+	}
+	
+	@Test
+	@DisplayName("Deve atualizar uma pessoa")
+	public void updatePessoaTest() {
+		// Cenário
+		Long id = 2l;
+		
+		PessoaDTO pessoaDto = new PessoaDTO(id, "Fulano Cauê Calebe Jesus", LocalDate.of(1997, 11, 14));
+		Pessoa foundPessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
+		Pessoa updatedPessoa = new Pessoa(id, "Fulano Cauê Calebe Jesus", LocalDate.of(1997, 11, 14));
+		
+		Mockito.when(pessoaRepository.save(Mockito.any(Pessoa.class))).thenReturn(updatedPessoa);
+		Mockito.doReturn(foundPessoa).when(pessoaService).findById(id);
+		
+		// Execução
+		PessoaDTO updatedPessoaDto = pessoaService.update(id, pessoaDto);
+		
+		// Verificação
+		Assertions.assertThat(updatedPessoaDto.getId()).isEqualTo(id);
+		Assertions.assertThat(updatedPessoaDto.getNome()).isEqualTo("Fulano Cauê Calebe Jesus");
+		Assertions.assertThat(updatedPessoaDto.getDataDeNascimento()).isEqualTo(LocalDate.of(1997, 11, 14));	
 	}
 
 }

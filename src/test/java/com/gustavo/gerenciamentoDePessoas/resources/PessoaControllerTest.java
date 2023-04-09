@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaNewDTO;
-import com.gustavo.gerenciamentoDePessoas.entities.Pessoa;
 import com.gustavo.gerenciamentoDePessoas.services.PessoaService;
 
 @ExtendWith(SpringExtension.class)
@@ -61,7 +60,7 @@ public class PessoaControllerTest {
 		long id = 2l;
 		
 		PessoaNewDTO newPessoa = new PessoaNewDTO("Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
-		PessoaDTO savedPessoa = new PessoaDTO(new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17)));
+		PessoaDTO savedPessoa = new PessoaDTO(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
 		
 		BDDMockito.given(pessoaService.save(Mockito.any(PessoaNewDTO.class))).willReturn(savedPessoa);
 				

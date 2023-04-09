@@ -25,6 +25,17 @@ public class PessoaService {
 		return new PessoaDTO(pessoa);		
 	}
 	
+	public PessoaDTO update(Long id, PessoaDTO pessoaDto) {
+		Pessoa pessoa = findById(id);
+		
+		pessoa.setNome(pessoaDto.getNome());
+		pessoa.setDataDeNascimento(pessoa.getDataDeNascimento());
+		
+		pessoa = pessoaRepository.save(pessoa);
+		
+		return new PessoaDTO(pessoa);
+	}
+	
 	public Pessoa findById(Long id) {
 		
 		Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);

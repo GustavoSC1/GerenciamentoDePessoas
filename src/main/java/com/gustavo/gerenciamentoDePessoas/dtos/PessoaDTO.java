@@ -22,6 +22,12 @@ public class PessoaDTO implements Serializable {
 		this.dataDeNascimento = pessoa.getDataDeNascimento();
 	}
 
+	public PessoaDTO(Long id, String nome, LocalDate dataDeNascimento) {
+		this.id = id;
+		this.nome = nome;
+		this.dataDeNascimento = dataDeNascimento;
+	}
+
 	public Long getId() {
 		return id;
 	}

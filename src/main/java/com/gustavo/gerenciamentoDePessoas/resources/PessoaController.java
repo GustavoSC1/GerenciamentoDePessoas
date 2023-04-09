@@ -4,7 +4,9 @@ import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +33,13 @@ public class PessoaController {
 				 .buildAndExpand(pessoaDto.getId()).toUri();
 		
 		return ResponseEntity.created(uri).body(pessoaDto);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<PessoaDTO> update(@PathVariable Long id, @Valid @RequestBody PessoaNewDTO pessoaDto) {
+		PessoaDTO pessoa = pessoaService.update(id, pessoaDto);
+		
+		return ResponseEntity.ok().body(pessoa);
 	}
 
 }

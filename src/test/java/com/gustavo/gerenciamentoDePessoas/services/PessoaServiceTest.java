@@ -97,7 +97,7 @@ public class PessoaServiceTest {
 		// Cenário
 		Long id = 2l;
 		
-		PessoaDTO pessoaDto = new PessoaDTO(id, "Fulano Cauê Calebe Jesus", LocalDate.of(1997, 11, 14));
+		PessoaNewDTO pessoaDto = new PessoaNewDTO("Fulano Cauê Calebe Jesus", LocalDate.of(1997, 11, 14));
 		Pessoa foundPessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
 		Pessoa updatedPessoa = new Pessoa(id, "Fulano Cauê Calebe Jesus", LocalDate.of(1997, 11, 14));
 		

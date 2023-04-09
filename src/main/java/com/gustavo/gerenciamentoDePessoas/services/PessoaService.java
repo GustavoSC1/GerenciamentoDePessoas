@@ -25,7 +25,7 @@ public class PessoaService {
 		return new PessoaDTO(pessoa);		
 	}
 	
-	public PessoaDTO update(Long id, PessoaDTO pessoaDto) {
+	public PessoaDTO update(Long id, PessoaNewDTO pessoaDto) {
 		Pessoa pessoa = findById(id);
 		
 		pessoa.setNome(pessoaDto.getNome());

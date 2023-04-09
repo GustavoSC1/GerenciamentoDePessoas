@@ -100,5 +100,55 @@ public class PessoaControllerTest {
 					.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
 					.andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(2)));
 	}
+	
+	@Test
+	@DisplayName("Deve atualizar uma pessoa")
+	public void updatePessoaTest() throws Exception {
+		// Cenário
+		Long id = 2l;
+		
+		PessoaNewDTO pessoaUpdateDTO = new PessoaNewDTO("Fulano Cauê Calebe Jesus", LocalDate.of(1997, 11, 14));
+				
+		PessoaDTO updatedPessoa = new PessoaDTO(id, "Fulano Cauê Calebe Jesus", LocalDate.of(1997, 11, 14));
+				
+		BDDMockito.given(pessoaService.update(Mockito.anyLong(), Mockito.any(PessoaNewDTO.class))).willReturn(updatedPessoa);
+		
+		String json = mapper.writeValueAsString(pessoaUpdateDTO);
+		
+		// Execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.put(PESSOA_API.concat("/"+id))
+													.contentType(MediaType.APPLICATION_JSON)
+													.accept(MediaType.APPLICATION_JSON)
+													.content(json);
+		// Verificação
+		mvc.perform(request)
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
+		.andExpect(MockMvcResultMatchers.jsonPath("nome").value("Fulano Cauê Calebe Jesus"))
+		.andExpect(MockMvcResultMatchers.jsonPath("dataDeNascimento").value("1997-11-14"));
+	}
+	
+	@Test
+	@DisplayName("Should throw validation error when there is not enough data for user updating")
+	public void updateInvalidPessoaTest() throws Exception {
+		// Scenario
+		Long id = 2l;
+		
+		PessoaDTO user = new PessoaDTO();
+		
+		String json = mapper.writeValueAsString(user);
+				
+		// Execution
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.put(PESSOA_API.concat("/"+id))
+													.contentType(MediaType.APPLICATION_JSON)
+													.accept(MediaType.APPLICATION_JSON)
+													.content(json);		
+		// Verification
+		mvc.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+			.andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(2)));
+	}
 
 }

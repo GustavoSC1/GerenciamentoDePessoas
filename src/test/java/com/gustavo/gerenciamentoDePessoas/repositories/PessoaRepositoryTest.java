@@ -53,6 +53,9 @@ public class PessoaRepositoryTest {
 		
 		// Verificação
 		Assertions.assertThat(foundPessoa.isPresent()).isTrue();
+		Assertions.assertThat(foundPessoa.get().getId()).isNotNull();
+		Assertions.assertThat(foundPessoa.get().getNome()).isEqualTo("Gustavo Silva Cruz");
+		Assertions.assertThat(foundPessoa.get().getDataDeNascimento()).isEqualTo(LocalDate.of(1996, 10, 17));
 	}
 
 }

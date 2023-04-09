@@ -22,16 +22,18 @@ public class PessoaRepositoryTest {
 	PessoaRepository pessoaRepository;
 	
 	@Test
-	@DisplayName("Deve salvar uma Pessoa")
+	@DisplayName("Deve salvar uma nova Pessoa")
 	public void savePessoaTest() {
-		// Scenario
-		Pessoa newPessoa = new Pessoa(null, "Gustavo", LocalDate.of(1996, 10, 17));
+		// Cenário
+		Pessoa newPessoa = new Pessoa(null, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
 		
-		// Execution
+		// Execução
 		Pessoa savedPessoa = pessoaRepository.save(newPessoa);
 		
-		// Verification
+		// Verificação
 		Assertions.assertThat(savedPessoa.getId()).isNotNull();
+		Assertions.assertThat(savedPessoa.getNome()).isEqualTo("Gustavo Silva Cruz");
+		Assertions.assertThat(savedPessoa.getDataDeNascimento()).isEqualTo(LocalDate.of(1996, 10, 17));
 	}
 
 }

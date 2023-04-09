@@ -130,7 +130,7 @@ public class PessoaControllerTest {
 	}
 	
 	@Test
-	@DisplayName("Should throw validation error when there is not enough data for user updating")
+	@DisplayName("Deve lançar erro de validação quando não há dados suficientes para atualização da pessoa")
 	public void updateInvalidPessoaTest() throws Exception {
 		// Scenario
 		Long id = 2l;

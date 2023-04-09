@@ -3,6 +3,8 @@ package com.gustavo.gerenciamentoDePessoas.services;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -12,6 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -130,6 +135,34 @@ public class PessoaServiceTest {
 		Assertions.assertThat(updatedPessoaDto.getId()).isEqualTo(id);
 		Assertions.assertThat(updatedPessoaDto.getNome()).isEqualTo("Fulano Cauê Calebe Jesus");
 		Assertions.assertThat(updatedPessoaDto.getDataDeNascimento()).isEqualTo(LocalDate.of(1997, 11, 14));	
+	}
+	
+	@Test
+	@DisplayName("Deve obter uma lista das pessoas")
+	public void findAllTest() {
+		// Cenário
+		Long id = 2l;
+		
+		Pessoa pessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
+		
+		List<Pessoa> list = Arrays.asList(pessoa);
+		
+		PageRequest pageRequest = PageRequest.of(0, 24);
+		
+		Page<Pessoa> page = new PageImpl<Pessoa>(list, pageRequest, list.size());
+		
+		Mockito.when(pessoaRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(page);
+		
+		// Execução
+		Page<PessoaDTO> foundPessoas = pessoaService.findAll(0, 24, "nome", "ASC");
+		
+		// Verificação
+		Assertions.assertThat(foundPessoas.getTotalElements()).isEqualTo(1);		
+		Assertions.assertThat(foundPessoas.getPageable().getPageNumber()).isEqualTo(0);
+		Assertions.assertThat(foundPessoas.getPageable().getPageSize()).isEqualTo(24);		
+		Assertions.assertThat(foundPessoas.getContent().get(0).getId()).isEqualTo(id);
+		Assertions.assertThat(foundPessoas.getContent().get(0).getNome()).isEqualTo("Gustavo Silva Cruz");
+		Assertions.assertThat(foundPessoas.getContent().get(0).getDataDeNascimento()).isEqualTo(LocalDate.of(1996, 10, 17));
 	}
 
 }

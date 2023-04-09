@@ -3,6 +3,8 @@ package com.gustavo.gerenciamentoDePessoas.services;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.gustavo.gerenciamentoDePessoas.services.exceptions.ObjectNotFoundException;
@@ -41,6 +43,12 @@ public class PessoaService {
 		pessoa = pessoaRepository.save(pessoa);
 		
 		return new PessoaDTO(pessoa);
+	}
+	
+	public Page<PessoaDTO> findAll(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		
+		return pessoaRepository.findAll(pageRequest).map(obj -> new PessoaDTO(obj));
 	}
 		
 	public Pessoa findById(Long id) {

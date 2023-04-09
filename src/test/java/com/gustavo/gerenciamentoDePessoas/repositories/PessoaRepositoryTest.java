@@ -62,6 +62,7 @@ public class PessoaRepositoryTest {
 	}
 	
 	@Test
+	@DisplayName("Deve obter uma lista das pessoas")
 	public void findAllTest() {
 		// Cenário
 		PageRequest pageRequest = PageRequest.of(0, 24, Direction.valueOf("ASC"), "nome");

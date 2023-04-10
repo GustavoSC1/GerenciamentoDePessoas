@@ -1,11 +1,14 @@
 package com.gustavo.gerenciamentoDePessoas.entities;
 
 import java.time.LocalDate;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Pessoa {
@@ -15,6 +18,9 @@ public class Pessoa {
 	private Long id;
 	private String nome;
 	private LocalDate dataDeNascimento;
+	
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+	private Set<Endereco> enderecos;
 		
 	public Pessoa() {
 		
@@ -38,6 +44,10 @@ public class Pessoa {
 		return dataDeNascimento;
 	}
 	
+	public Set<Endereco> getEnderecos() {
+		return enderecos;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -48,6 +58,10 @@ public class Pessoa {
 	
 	public void setDataDeNascimento(LocalDate dataDeNascimento) {
 		this.dataDeNascimento = dataDeNascimento;
+	}
+
+	public void setEnderecos(Set<Endereco> enderecos) {
+		this.enderecos = enderecos;
 	}
 
 	@Override

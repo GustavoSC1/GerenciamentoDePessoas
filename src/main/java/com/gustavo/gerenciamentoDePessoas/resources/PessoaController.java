@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,10 +37,17 @@ public class PessoaController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<PessoaDTO> update(@PathVariable Long id, @Valid @RequestBody PessoaNewDTO pessoaDto) {
-		PessoaDTO pessoa = pessoaService.update(id, pessoaDto);
+	public ResponseEntity<PessoaDTO> update(@PathVariable Long id, @Valid @RequestBody PessoaNewDTO pessoaNewDto) {
+		PessoaDTO pessoaDto = pessoaService.update(id, pessoaNewDto);
 		
-		return ResponseEntity.ok().body(pessoa);
+		return ResponseEntity.ok().body(pessoaDto);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<PessoaDTO> find(@PathVariable Long id) {
+		PessoaDTO pessoaDto = pessoaService.find(id);
+		
+		return ResponseEntity.ok().body(pessoaDto);
 	}
 
 }

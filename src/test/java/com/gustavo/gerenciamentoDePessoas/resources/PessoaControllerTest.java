@@ -102,6 +102,29 @@ public class PessoaControllerTest {
 	}
 	
 	@Test
+	@DisplayName("Deve obter uma pessoa por id")
+	public void findPessoaTest() throws Exception {
+		// Cenário
+		Long id = 2l;
+		
+		PessoaDTO pessoa = new PessoaDTO(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
+		
+		BDDMockito.given(pessoaService.find(id)).willReturn(pessoa);
+		
+		// Execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.get(PESSOA_API.concat("/"+id))
+													.accept(MediaType.APPLICATION_JSON);
+		
+		// Verificação
+		mvc.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
+			.andExpect(MockMvcResultMatchers.jsonPath("nome").value("Gustavo Silva Cruz"))
+			.andExpect(MockMvcResultMatchers.jsonPath("dataDeNascimento").value("1996-10-17"));
+	}
+		
+	@Test
 	@DisplayName("Deve atualizar uma pessoa")
 	public void updatePessoaTest() throws Exception {
 		// Cenário
@@ -128,7 +151,7 @@ public class PessoaControllerTest {
 		.andExpect(MockMvcResultMatchers.jsonPath("nome").value("Fulano Cauê Calebe Jesus"))
 		.andExpect(MockMvcResultMatchers.jsonPath("dataDeNascimento").value("1997-11-14"));
 	}
-	
+		
 	@Test
 	@DisplayName("Deve lançar erro de validação quando não há dados suficientes para atualização da pessoa")
 	public void updateInvalidPessoaTest() throws Exception {

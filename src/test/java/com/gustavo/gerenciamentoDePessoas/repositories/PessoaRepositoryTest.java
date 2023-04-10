@@ -79,5 +79,5 @@ public class PessoaRepositoryTest {
 		Assertions.assertThat(foundPessoas.getTotalElements()).isEqualTo(1);
 		Assertions.assertThat(foundPessoas.getTotalPages()).isEqualTo(1);
 	}
-
+	
 }

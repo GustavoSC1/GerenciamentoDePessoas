@@ -34,7 +34,7 @@ public class EnderecoRepositoryTest {
 		
 		entityManager.persist(newPessoa);
 		
-		Endereco newEndereco = new Endereco(null, "Rua Belém", "88160-396", "646", "Biguaçu", newPessoa);
+		Endereco newEndereco = new Endereco(null, "Rua Belém", "88160-396", "646", "Biguaçu", false, newPessoa);
 		
 		// Execução
 		Endereco savedEndereco = enderecoRepository.save(newEndereco);

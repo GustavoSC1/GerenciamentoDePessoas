@@ -1,6 +1,8 @@
 package com.gustavo.gerenciamentoDePessoas.resources;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -155,23 +160,55 @@ public class PessoaControllerTest {
 	@Test
 	@DisplayName("Deve lançar erro de validação quando não há dados suficientes para atualização da pessoa")
 	public void updateInvalidPessoaTest() throws Exception {
-		// Scenario
+		// Cenário
 		Long id = 2l;
 		
 		PessoaDTO user = new PessoaDTO();
 		
 		String json = mapper.writeValueAsString(user);
 				
-		// Execution
+		// Execução
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
 													.put(PESSOA_API.concat("/"+id))
 													.contentType(MediaType.APPLICATION_JSON)
 													.accept(MediaType.APPLICATION_JSON)
 													.content(json);		
-		// Verification
+		// Verificação
 		mvc.perform(request)
 			.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
 			.andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(2)));
+	}
+	
+	@Test
+	@DisplayName("Deve obter uma lista das pessoas")
+	public void findAllTest() throws Exception {
+		// Cenário
+		Long id = 2l;
+		
+		PessoaDTO pessoa = new PessoaDTO(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
+		
+		List<PessoaDTO> list = Arrays.asList(pessoa);
+		
+		PageRequest pageRequest = PageRequest.of(0, 24);
+		
+		Page<PessoaDTO> page = new PageImpl<PessoaDTO>(list, pageRequest, list.size());
+		
+		BDDMockito.given(pessoaService.findAll(0, 24, "nome", "ASC")).willReturn(page);
+		
+		String queryString = String.format("?page=0&linesPerPage=24&orderBy=%s&direction=%s", "nome", "ASC");
+				
+		// Execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+														.get(PESSOA_API.concat(queryString))
+														.accept(MediaType.APPLICATION_JSON);
+		
+		// Verificação
+		mvc.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("content", Matchers.hasSize(1)))
+			.andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(1))
+			.andExpect(MockMvcResultMatchers.jsonPath("pageable.pageSize").value(24))
+			.andExpect(MockMvcResultMatchers.jsonPath("pageable.pageNumber").value(0));
 	}
 
 }

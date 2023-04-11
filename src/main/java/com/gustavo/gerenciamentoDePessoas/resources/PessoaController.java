@@ -1,6 +1,7 @@
 package com.gustavo.gerenciamentoDePessoas.resources;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaNewDTO;
+import com.gustavo.gerenciamentoDePessoas.services.EnderecoService;
 import com.gustavo.gerenciamentoDePessoas.services.PessoaService;
 
 import jakarta.validation.Valid;
@@ -27,6 +30,9 @@ public class PessoaController {
 	
 	@Autowired
 	private PessoaService pessoaService;
+	
+	@Autowired
+	private EnderecoService enderecoService;
 	
 	@PostMapping
 	public ResponseEntity<PessoaDTO> save(@Valid @RequestBody PessoaNewDTO pessoaNewDto) {
@@ -62,6 +68,13 @@ public class PessoaController {
 		Page<PessoaDTO> pessoaDto = pessoaService.findAll(page, linesPerPage, orderBy, direction);
 		
 		return ResponseEntity.ok().body(pessoaDto);
+	}
+	
+	@GetMapping("/{idPessoa}/enderecos")
+	public ResponseEntity<List<EnderecoDTO>> findEnderecoByPessoa(@PathVariable Long idPessoa) {
+		List<EnderecoDTO> list = enderecoService.findByPessoa(idPessoa);
+		
+		return ResponseEntity.ok().body(list);
 	}
 
 }

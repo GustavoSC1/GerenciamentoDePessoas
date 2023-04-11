@@ -1,5 +1,8 @@
 package com.gustavo.gerenciamentoDePessoas.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoDTO;
@@ -30,6 +33,12 @@ public class EnderecoService {
 		 endereco = enderecoRepository.save(endereco);
 		
 		return new EnderecoDTO(endereco);
+	}
+	
+	public List<EnderecoDTO> findByPessoa(Long id) {
+		Pessoa pessoa = pessoaService.findById(id);
+		
+		return enderecoRepository.findByPessoa(pessoa).stream().map(obj -> new EnderecoDTO(obj)).collect(Collectors.toList());
 	}
 	
 }

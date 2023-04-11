@@ -1,6 +1,7 @@
 package com.gustavo.gerenciamentoDePessoas.services;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,6 +59,33 @@ public class EnderecoServiceTest {
 		Assertions.assertThat(savedEnderecoDto.getNumero()).isEqualTo("646");
 		Assertions.assertThat(savedEnderecoDto.getCidade()).isEqualTo("Biguaçu");
 		Assertions.assertThat(savedEnderecoDto.getPrincipal()).isEqualTo(false);
+	}
+	
+	@Test
+	@DisplayName("Deve obter a lista de endereços da pessoa")
+	public void findByPessoaTest() {
+		// Cenário
+		Long id = 1l;
+		
+		Pessoa foundPessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));	
+		Endereco foundEndereco = new Endereco(id, "Rua Belém", "88160-396", "646", "Biguaçu", false, foundPessoa);
+		
+		List<Endereco> listEnderecos = List.of(foundEndereco);
+		
+		Mockito.when(pessoaService.findById(id)).thenReturn(foundPessoa);
+		
+		Mockito.when(enderecoRepository.findByPessoa(Mockito.any(Pessoa.class))).thenReturn(listEnderecos);
+		
+		// Execução
+		List<EnderecoDTO> foundEnderecos = enderecoService.findByPessoa(id);
+				
+		// Verificação
+		Assertions.assertThat(foundEnderecos).hasSize(1);
+		Assertions.assertThat(foundEnderecos.get(0).getLogradouro()).isEqualTo("Rua Belém");
+		Assertions.assertThat(foundEnderecos.get(0).getCep()).isEqualTo("88160-396");
+		Assertions.assertThat(foundEnderecos.get(0).getNumero()).isEqualTo("646");
+		Assertions.assertThat(foundEnderecos.get(0).getCidade()).isEqualTo("Biguaçu");
+		Assertions.assertThat(foundEnderecos.get(0).getPrincipal()).isEqualTo(false);
 	}
 
 }

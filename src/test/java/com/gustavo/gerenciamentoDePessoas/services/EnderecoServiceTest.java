@@ -42,7 +42,7 @@ public class EnderecoServiceTest {
 		// Cenário
 		Long id = 1l;
 		
-		EnderecoNewDTO newEndereco = new EnderecoNewDTO("Rua Belém", "88160-396", "646", "Biguaçu", false, id);		
+		EnderecoNewDTO newEndereco = new EnderecoNewDTO("Rua Belém", "88160-396", "646", "Biguaçu", false);		
 		Pessoa foundPessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));		
 		Endereco savedEndereco = new Endereco(id, "Rua Belém", "88160-396", "646", "Biguaçu", false, foundPessoa);
 		
@@ -50,7 +50,7 @@ public class EnderecoServiceTest {
 		Mockito.when(enderecoRepository.save(Mockito.any(Endereco.class))).thenReturn(savedEndereco);
 		
 		// Execução
-		EnderecoDTO savedEnderecoDto = enderecoService.save(newEndereco);
+		EnderecoDTO savedEnderecoDto = enderecoService.save(id, newEndereco);
 		
 		// Verificação
 		Assertions.assertThat(savedEnderecoDto.getId()).isEqualTo(id);

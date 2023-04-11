@@ -23,9 +23,9 @@ public class EnderecoService {
 		this.pessoaService = pessoaService;
 	}
 
-	public EnderecoDTO save(EnderecoNewDTO enderecoDto) {
+	public EnderecoDTO save(Long idPessoa, EnderecoNewDTO enderecoDto) {
 		
-		Pessoa pessoa = pessoaService.findById(enderecoDto.getId_pessoa());
+		Pessoa pessoa = pessoaService.findById(idPessoa);
 		
 		Endereco endereco = new Endereco(null, enderecoDto.getLogradouro(), enderecoDto.getCep(), enderecoDto.getNumero(), 
 				enderecoDto.getCidade(), false, pessoa);

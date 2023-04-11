@@ -71,6 +71,7 @@ public class PessoaController {
 	}
 	
 	@GetMapping("/{idPessoa}/enderecos")
+	// Resolvi utilizar List ao invés de Page porque geralmente uma pessoa não tem muitos endereços
 	public ResponseEntity<List<EnderecoDTO>> findEnderecoByPessoa(@PathVariable Long idPessoa) {
 		List<EnderecoDTO> list = enderecoService.findByPessoa(idPessoa);
 		

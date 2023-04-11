@@ -10,20 +10,17 @@ public class EnderecoNewDTO implements Serializable {
 	private String numero;
 	private String cidade;
 	private Boolean principal;
-	private Long id_pessoa;
 		
 	public EnderecoNewDTO() {
 		
 	}
 
-	public EnderecoNewDTO(String logradouro, String cep, String numero, String cidade, Boolean principal,
-			Long id_pessoa) {
+	public EnderecoNewDTO(String logradouro, String cep, String numero, String cidade, Boolean principal) {
 		this.logradouro = logradouro;
 		this.cep = cep;
 		this.numero = numero;
 		this.cidade = cidade;
 		this.principal = principal;
-		this.id_pessoa = id_pessoa;
 	}
 
 	public String getLogradouro() {
@@ -46,10 +43,6 @@ public class EnderecoNewDTO implements Serializable {
 		return principal;
 	}
 
-	public Long getId_pessoa() {
-		return id_pessoa;
-	}
-
 	public void setLogradouro(String logradouro) {
 		this.logradouro = logradouro;
 	}
@@ -68,10 +61,6 @@ public class EnderecoNewDTO implements Serializable {
 
 	public void setPrincipal(Boolean principal) {
 		this.principal = principal;
-	}
-
-	public void setId_pessoa(Long id_pessoa) {
-		this.id_pessoa = id_pessoa;
 	}
 
 }

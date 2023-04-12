@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoDTO;
+import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoNewDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaNewDTO;
 import com.gustavo.gerenciamentoDePessoas.services.EnderecoService;
@@ -68,6 +69,14 @@ public class PessoaController {
 		Page<PessoaDTO> pessoaDto = pessoaService.findAll(page, linesPerPage, orderBy, direction);
 		
 		return ResponseEntity.ok().body(pessoaDto);
+	}
+	
+	@PostMapping("/{idPessoa}/enderecos")
+	public ResponseEntity<EnderecoDTO> saveEndereco(@PathVariable Long idPessoa, @RequestBody EnderecoNewDTO enderecoNewDto) {
+		EnderecoDTO enderecoDto = enderecoService.save(idPessoa, enderecoNewDto);
+		
+		return ResponseEntity.ok().body(enderecoDto);
+				
 	}
 	
 	@GetMapping("/{idPessoa}/enderecos")

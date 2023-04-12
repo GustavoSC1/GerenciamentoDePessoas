@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoDTO;
+import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoNewDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaNewDTO;
 import com.gustavo.gerenciamentoDePessoas.services.EnderecoService;
@@ -214,6 +215,37 @@ public class PessoaControllerTest {
 			.andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(1))
 			.andExpect(MockMvcResultMatchers.jsonPath("pageable.pageSize").value(24))
 			.andExpect(MockMvcResultMatchers.jsonPath("pageable.pageNumber").value(0));
+	}
+	
+	@Test
+	@DisplayName("Deve salvar um novo Endereço")
+	public void saveEnderecoTest() throws Exception {
+		// Cenário
+		Long id = 1l;
+		
+		EnderecoNewDTO newEndereco = new EnderecoNewDTO("Rua Belém", "88160-396", "646", "Biguaçu", false);
+		EnderecoDTO enderecoDto = new EnderecoDTO(id, "Rua Belém", "88160-396", "646", "Biguaçu", false);
+		
+		BDDMockito.given(enderecoService.save(Mockito.anyLong(), Mockito.any(EnderecoNewDTO.class))).willReturn(enderecoDto);
+		
+		String json = mapper.writeValueAsString(newEndereco);
+		
+		// Execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.post(PESSOA_API.concat("/"+id+"/enderecos"))
+													.contentType(MediaType.APPLICATION_JSON)
+													.accept(MediaType.APPLICATION_JSON)
+													.content(json);		
+		
+		// Verificação
+		mvc.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
+			.andExpect(MockMvcResultMatchers.jsonPath("logradouro").value("Rua Belém"))
+			.andExpect(MockMvcResultMatchers.jsonPath("cep").value("88160-396"))
+			.andExpect(MockMvcResultMatchers.jsonPath("numero").value("646"))
+			.andExpect(MockMvcResultMatchers.jsonPath("cidade").value("Biguaçu"))
+			.andExpect(MockMvcResultMatchers.jsonPath("principal").value(false));
 	}
 	
 	@Test

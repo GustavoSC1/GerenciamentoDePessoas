@@ -2,6 +2,7 @@ package com.gustavo.gerenciamentoDePessoas.repositories;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -70,6 +71,31 @@ public class EnderecoRepositoryTest {
 		// Verificação
 		Assertions.assertThat(foundEnderecos).hasSize(1);
 		Assertions.assertThat(foundEnderecos).contains(endereco1);
+	}
+	
+	@Test
+	@DisplayName("Deve obter um endereço com base no seu id e na pessoa")
+	public void findByIdAndPessoaTest() {
+		// Cenário
+		Pessoa pessoa = new Pessoa(null, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
+		
+		entityManager.persist(pessoa);
+		
+		Endereco endereco1 = new Endereco(null, "Rua Belém", "88160-396", "646", "Biguaçu", false, pessoa);
+		Endereco endereco2 = new Endereco(null, "Rua Oclécio Barbosa Martins", "79050-460", "341", "Campo Grande", false, pessoa);
+		
+		entityManager.persist(endereco1);
+		entityManager.persist(endereco2);
+				
+		// Execução
+		Optional<Endereco> foundEndereco = enderecoRepository.findByIdAndPessoa(endereco1.getId(), pessoa);
+		
+		// Verificação
+		Assertions.assertThat(foundEndereco.isPresent()).isTrue();
+		Assertions.assertThat(foundEndereco.get().getId()).isNotNull();
+		Assertions.assertThat(foundEndereco.get().getLogradouro()).isEqualTo("Rua Belém");
+		Assertions.assertThat(foundEndereco.get().getCep()).isEqualTo("88160-396");
+		Assertions.assertThat(foundEndereco.get().getEnderecoPrincipal()).isEqualTo(false);
 	}
 
 }

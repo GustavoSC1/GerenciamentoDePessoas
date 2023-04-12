@@ -245,7 +245,7 @@ public class PessoaControllerTest {
 			.andExpect(MockMvcResultMatchers.jsonPath("cep").value("88160-396"))
 			.andExpect(MockMvcResultMatchers.jsonPath("numero").value("646"))
 			.andExpect(MockMvcResultMatchers.jsonPath("cidade").value("Biguaçu"))
-			.andExpect(MockMvcResultMatchers.jsonPath("principal").value(false));
+			.andExpect(MockMvcResultMatchers.jsonPath("enderecoPrincipal").value(false));
 	}
 	
 	@Test
@@ -274,7 +274,30 @@ public class PessoaControllerTest {
 			.andExpect(MockMvcResultMatchers.jsonPath("[0].cep").value("88160-396"))
 			.andExpect(MockMvcResultMatchers.jsonPath("[0].numero").value("646"))
 			.andExpect(MockMvcResultMatchers.jsonPath("[0].cidade").value("Biguaçu"))
-			.andExpect(MockMvcResultMatchers.jsonPath("[0].principal").value(false));
+			.andExpect(MockMvcResultMatchers.jsonPath("[0].enderecoPrincipal").value(false));
+	}
+	
+	@Test	
+	@DisplayName("Deve lançar um erro de validação quando não há dados suficientes para a criação do endereço")
+	public void saveInvalidEnderecoTest() throws Exception {
+		// Cenário
+		Long id = 1l;
+		
+		EnderecoNewDTO enderecoDto = new EnderecoNewDTO();
+		
+		String json = mapper.writeValueAsString(enderecoDto);
+		
+		// Execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.post(PESSOA_API.concat("/"+id+"/enderecos"))
+													.contentType(MediaType.APPLICATION_JSON)
+													.accept(MediaType.APPLICATION_JSON)
+													.content(json);		
+		
+		// Verificação
+		mvc.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+			.andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(5)));
 	}
 
 }

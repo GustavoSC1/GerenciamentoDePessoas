@@ -72,11 +72,10 @@ public class PessoaController {
 	}
 	
 	@PostMapping("/{idPessoa}/enderecos")
-	public ResponseEntity<EnderecoDTO> saveEndereco(@PathVariable Long idPessoa, @RequestBody EnderecoNewDTO enderecoNewDto) {
+	public ResponseEntity<EnderecoDTO> saveEndereco(@PathVariable Long idPessoa, @Valid @RequestBody EnderecoNewDTO enderecoNewDto) {
 		EnderecoDTO enderecoDto = enderecoService.save(idPessoa, enderecoNewDto);
 		
-		return ResponseEntity.ok().body(enderecoDto);
-				
+		return ResponseEntity.ok().body(enderecoDto);				
 	}
 	
 	@GetMapping("/{idPessoa}/enderecos")

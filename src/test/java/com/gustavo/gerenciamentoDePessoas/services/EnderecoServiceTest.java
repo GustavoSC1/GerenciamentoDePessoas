@@ -58,7 +58,7 @@ public class EnderecoServiceTest {
 		Assertions.assertThat(savedEnderecoDto.getCep()).isEqualTo("88160-396");
 		Assertions.assertThat(savedEnderecoDto.getNumero()).isEqualTo("646");
 		Assertions.assertThat(savedEnderecoDto.getCidade()).isEqualTo("Biguaçu");
-		Assertions.assertThat(savedEnderecoDto.getPrincipal()).isEqualTo(false);
+		Assertions.assertThat(savedEnderecoDto.getEnderecoPrincipal()).isEqualTo(false);
 	}
 	
 	@Test
@@ -85,7 +85,7 @@ public class EnderecoServiceTest {
 		Assertions.assertThat(foundEnderecos.get(0).getCep()).isEqualTo("88160-396");
 		Assertions.assertThat(foundEnderecos.get(0).getNumero()).isEqualTo("646");
 		Assertions.assertThat(foundEnderecos.get(0).getCidade()).isEqualTo("Biguaçu");
-		Assertions.assertThat(foundEnderecos.get(0).getPrincipal()).isEqualTo(false);
+		Assertions.assertThat(foundEnderecos.get(0).getEnderecoPrincipal()).isEqualTo(false);
 	}
 
 }

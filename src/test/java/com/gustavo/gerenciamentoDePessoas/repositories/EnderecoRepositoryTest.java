@@ -46,6 +46,7 @@ public class EnderecoRepositoryTest {
 		Assertions.assertThat(savedEndereco.getCep()).isEqualTo("88160-396");
 		Assertions.assertThat(savedEndereco.getNumero()).isEqualTo("646");
 		Assertions.assertThat(savedEndereco.getCidade()).isEqualTo("Biguaçu");
+		Assertions.assertThat(savedEndereco.getEnderecoPrincipal()).isEqualTo(false);
 		Assertions.assertThat(savedEndereco.getPessoa()).isNotNull();
 	}
 	

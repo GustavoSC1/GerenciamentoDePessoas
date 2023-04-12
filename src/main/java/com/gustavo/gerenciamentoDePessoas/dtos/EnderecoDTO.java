@@ -12,7 +12,7 @@ public class EnderecoDTO implements Serializable {
 	private String cep;
 	private String numero;
 	private String cidade;
-	private Boolean principal;
+	private Boolean enderecoPrincipal;
 		
 	public EnderecoDTO() {
 		
@@ -24,16 +24,16 @@ public class EnderecoDTO implements Serializable {
 		this.cep = endereco.getCep();
 		this.numero = endereco.getNumero();
 		this.cidade = endereco.getCidade();
-		this.principal = endereco.getPrincipal();
+		this.enderecoPrincipal = endereco.getEnderecoPrincipal();
 	}
 
-	public EnderecoDTO(Long id, String logradouro, String cep, String numero, String cidade, Boolean principal) {
+	public EnderecoDTO(Long id, String logradouro, String cep, String numero, String cidade, Boolean enderecoPrincipal) {
 		this.id = id;
 		this.logradouro = logradouro;
 		this.cep = cep;
 		this.numero = numero;
 		this.cidade = cidade;
-		this.principal = principal;
+		this.enderecoPrincipal = enderecoPrincipal;
 	}
 
 	public Long getId() {
@@ -56,10 +56,10 @@ public class EnderecoDTO implements Serializable {
 		return cidade;
 	}
 	
-	public Boolean getPrincipal() {
-		return principal;
+	public Boolean getEnderecoPrincipal() {
+		return enderecoPrincipal;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -79,9 +79,9 @@ public class EnderecoDTO implements Serializable {
 	public void setCidade(String cidade) {
 		this.cidade = cidade;
 	}
-	
-	public void setPrincipal(Boolean principal) {
-		this.principal = principal;
+
+	public void setEnderecoPrincipal(Boolean enderecoPrincipal) {
+		this.enderecoPrincipal = enderecoPrincipal;
 	}
 
 }

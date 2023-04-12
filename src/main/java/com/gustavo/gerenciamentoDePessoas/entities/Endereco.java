@@ -17,7 +17,7 @@ public class Endereco {
 	private String cep;
 	private String numero;
 	private String cidade;
-	private Boolean principal;
+	private Boolean enderecoPrincipal;
 	
 	@ManyToOne
 	@JoinColumn(name="id_pessoa")
@@ -27,13 +27,13 @@ public class Endereco {
 		
 	}
 	
-	public Endereco(Long id, String logradouro, String cep, String numero, String cidade, Boolean principal, Pessoa pessoa) {
+	public Endereco(Long id, String logradouro, String cep, String numero, String cidade, Boolean enderecoPrincipal, Pessoa pessoa) {
 		this.id = id;
 		this.logradouro = logradouro;
 		this.cep = cep;
 		this.numero = numero;
 		this.cidade = cidade;
-		this.principal = principal;
+		this.enderecoPrincipal = enderecoPrincipal;
 		this.pessoa = pessoa;
 	}
 
@@ -57,8 +57,8 @@ public class Endereco {
 		return cidade;
 	}
 
-	public Boolean getPrincipal() {
-		return principal;
+	public Boolean getEnderecoPrincipal() {
+		return enderecoPrincipal;
 	}
 
 	public Pessoa getPessoa() {
@@ -85,8 +85,8 @@ public class Endereco {
 		this.cidade = cidade;
 	}
 
-	public void setPrincipal(Boolean principal) {
-		this.principal = principal;
+	public void setEnderecoPrincipal(Boolean enderecoPrincipal) {
+		this.enderecoPrincipal = enderecoPrincipal;
 	}
 
 	public void setPessoa(Pessoa pessoa) {

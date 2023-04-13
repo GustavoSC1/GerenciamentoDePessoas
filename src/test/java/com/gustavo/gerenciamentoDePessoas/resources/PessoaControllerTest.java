@@ -27,11 +27,13 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoNewDTO;
+import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoPrincipalUpdateDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaNewDTO;
 import com.gustavo.gerenciamentoDePessoas.services.EnderecoService;
@@ -298,6 +300,37 @@ public class PessoaControllerTest {
 		mvc.perform(request)
 			.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
 			.andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(5)));
+	}
+	
+	@Test
+	@DisplayName("Deve atualizar o campo enderecoPrincipal de um endereço")
+	public void updateEnderecoPrincipalByIdTest() throws Exception {
+		// Cenário
+		Long id = 2l;
+		
+		EnderecoPrincipalUpdateDTO enderecoPrincipalUpdateDTO = new EnderecoPrincipalUpdateDTO(id);
+		EnderecoDTO enderecoDto = new EnderecoDTO(id, "Rua Belém", "88160-396", "646", "Biguaçu", true);
+		
+		BDDMockito.given(enderecoService.updateEnderecoPrincipalById(Mockito.anyLong(), Mockito.any(EnderecoPrincipalUpdateDTO.class))).willReturn(enderecoDto);
+		
+		String json = mapper.writeValueAsString(enderecoPrincipalUpdateDTO);
+		
+		// Execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.patch(PESSOA_API.concat("/"+id+"/enderecos"))
+													.contentType(MediaType.APPLICATION_JSON)
+													.accept(MediaType.APPLICATION_JSON)
+													.content(json);	
+		
+		// Verificação
+		mvc.perform(request)
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("id").value(id))
+				.andExpect(MockMvcResultMatchers.jsonPath("logradouro").value("Rua Belém"))
+				.andExpect(MockMvcResultMatchers.jsonPath("cep").value("88160-396"))
+				.andExpect(MockMvcResultMatchers.jsonPath("numero").value("646"))
+				.andExpect(MockMvcResultMatchers.jsonPath("cidade").value("Biguaçu"))
+				.andExpect(MockMvcResultMatchers.jsonPath("enderecoPrincipal").value(true));
 	}
 
 }

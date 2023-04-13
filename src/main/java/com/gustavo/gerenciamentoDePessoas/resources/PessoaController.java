@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoNewDTO;
+import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoPrincipalUpdateDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.PessoaNewDTO;
 import com.gustavo.gerenciamentoDePessoas.services.EnderecoService;
@@ -84,6 +86,13 @@ public class PessoaController {
 		List<EnderecoDTO> list = enderecoService.findByPessoa(idPessoa);
 		
 		return ResponseEntity.ok().body(list);
+	}
+	
+	@PatchMapping("/{idPessoa}/enderecos")
+	public ResponseEntity<EnderecoDTO> updateEnderecoPrincipalById(@PathVariable Long idPessoa, @RequestBody EnderecoPrincipalUpdateDTO enderecoPrincipalUpdateDTO) {
+		EnderecoDTO enderecoDto = enderecoService.updateEnderecoPrincipalById(idPessoa, enderecoPrincipalUpdateDTO);
+		
+		return ResponseEntity.ok().body(enderecoDto);				
 	}
 
 }

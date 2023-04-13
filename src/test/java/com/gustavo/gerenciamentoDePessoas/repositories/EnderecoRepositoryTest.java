@@ -128,7 +128,7 @@ public class EnderecoRepositoryTest {
 	
 	@Test
 	@DisplayName("Deve atualizar o enderecoPrincipal de todos os endereços de uma pessoa, exceto o endereço com o id específico")
-	public void updateEnderecoPrincipalByPessoaExceptId() {
+	public void updateEnderecoPrincipalByPessoaExceptIdTest() {
 		// Cenário	
 		Pessoa pessoa = new Pessoa(null, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
 		

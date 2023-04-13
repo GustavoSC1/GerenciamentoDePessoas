@@ -87,5 +87,20 @@ public class EnderecoServiceTest {
 		Assertions.assertThat(foundEnderecos.get(0).getCidade()).isEqualTo("Biguaçu");
 		Assertions.assertThat(foundEnderecos.get(0).getEnderecoPrincipal()).isEqualTo(false);
 	}
+	
+	@Test
+	@DisplayName("Deve atualizar o enderecoPrincipal de todos os endereços de uma pessoa, exceto o endereço com o id específico")
+	public void updateEnderecoPrincipalByPessoaExceptIdTest() {
+		// Cenário
+		Long id = 1l;
+		
+		Pessoa pessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));	
+		
+		// Execução
+		org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> enderecoService.updateEnderecoPrincipalByPessoaExceptId(false, pessoa, id));
+		
+		// Verificação
+		Mockito.verify(enderecoRepository, Mockito.times(1)).updateEnderecoPrincipalByPessoaExceptId(false, pessoa, id);;
+	}
 
 }

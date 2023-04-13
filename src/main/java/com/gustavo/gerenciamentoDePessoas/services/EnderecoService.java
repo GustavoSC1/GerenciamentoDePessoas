@@ -41,4 +41,10 @@ public class EnderecoService {
 		return enderecoRepository.findByPessoa(pessoa).stream().map(obj -> new EnderecoDTO(obj)).collect(Collectors.toList());
 	}
 	
+	public void updateEnderecoPrincipalByPessoaExceptId(Boolean enderecoPrincipal, Pessoa pessoa, Long id) {
+		
+		enderecoRepository.updateEnderecoPrincipalByPessoaExceptId(enderecoPrincipal, pessoa, id);
+		
+	}
+	
 }

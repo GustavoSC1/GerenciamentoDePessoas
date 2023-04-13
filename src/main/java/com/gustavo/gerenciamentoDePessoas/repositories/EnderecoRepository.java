@@ -25,4 +25,9 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
     @Query("update Endereco obj set obj.enderecoPrincipal = :enderecoPrincipal where obj.id = :id")
 	void updateEnderecoPrincipalById(@Param("enderecoPrincipal") Boolean enderecoPrincipal, @Param("id") Long id);
 	
+	@Transactional
+    @Modifying
+    @Query("update Endereco obj set obj.enderecoPrincipal = :enderecoPrincipal where obj.pessoa = :pessoa and obj.id != :id")
+    void updateEnderecoPrincipalByPessoaExceptId(@Param("enderecoPrincipal") Boolean enderecoPrincipal, @Param("pessoa") Pessoa pessoa, @Param("id") Long id);
+	
 }

@@ -112,7 +112,8 @@ public class EnderecoRepositoryTest {
 		
 		// Execução
 		enderecoRepository.updateEnderecoPrincipalById(true, endereco.getId());
-
+		
+		// limpa o cache e força entityManager.find do banco de dados
 		entityManager.clear();
 		
 		Endereco foundEndereco = entityManager.find(Endereco.class, endereco.getId());
@@ -123,6 +124,42 @@ public class EnderecoRepositoryTest {
 		Assertions.assertThat(foundEndereco.getLogradouro()).isEqualTo("Rua Belém");
 		Assertions.assertThat(foundEndereco.getCep()).isEqualTo("88160-396");
 		Assertions.assertThat(foundEndereco.getEnderecoPrincipal()).isEqualTo(true);
+	}
+	
+	@Test
+	@DisplayName("Deve atualizar o enderecoPrincipal de todos os endereços de uma pessoa, exceto o endereço com o id específico")
+	public void updateEnderecoPrincipalByPessoaExceptId() {
+		// Cenário	
+		Pessoa pessoa = new Pessoa(null, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
+		
+		entityManager.persist(pessoa);
+		
+		Endereco endereco1 = new Endereco(null, "Rua Belém", "88160-396", "646", "Biguaçu", true, pessoa);
+		Endereco endereco2 = new Endereco(null, "Rua Oclécio Barbosa Martins", "79050-460", "341", "Campo Grande", true, pessoa);
+		
+		entityManager.persist(endereco1);
+		entityManager.persist(endereco2);
+		
+		// Execução
+		enderecoRepository.updateEnderecoPrincipalByPessoaExceptId(false, pessoa, endereco1.getId());
+		
+		entityManager.clear();
+		
+		Endereco foundEndereco1 = entityManager.find(Endereco.class, endereco1.getId());
+		Endereco foundEndereco2 = entityManager.find(Endereco.class, endereco2.getId());
+		
+		// Verificação
+		Assertions.assertThat(foundEndereco1).isNotNull();
+		Assertions.assertThat(foundEndereco1.getId()).isNotNull();
+		Assertions.assertThat(foundEndereco1.getLogradouro()).isEqualTo("Rua Belém");
+		Assertions.assertThat(foundEndereco1.getCep()).isEqualTo("88160-396");
+		Assertions.assertThat(foundEndereco1.getEnderecoPrincipal()).isEqualTo(true);
+		
+		Assertions.assertThat(foundEndereco2).isNotNull();
+		Assertions.assertThat(foundEndereco2.getId()).isNotNull();
+		Assertions.assertThat(foundEndereco2.getLogradouro()).isEqualTo("Rua Oclécio Barbosa Martins");
+		Assertions.assertThat(foundEndereco2.getCep()).isEqualTo("79050-460");
+		Assertions.assertThat(foundEndereco2.getEnderecoPrincipal()).isEqualTo(false);
 	}
 
 }

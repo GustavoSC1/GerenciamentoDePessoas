@@ -2,6 +2,7 @@ package com.gustavo.gerenciamentoDePessoas.services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoNewDTO;
+import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoPrincipalUpdateDTO;
 import com.gustavo.gerenciamentoDePessoas.entities.Endereco;
 import com.gustavo.gerenciamentoDePessoas.entities.Pessoa;
 import com.gustavo.gerenciamentoDePessoas.repositories.EnderecoRepository;
@@ -90,6 +92,34 @@ public class EnderecoServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Deve atualizar o campo enderecoPrincipal de um endereço")
+	public void updateEnderecoPrincipalByIdTest() {
+		// Cenário
+		Long id = 1l;
+		
+		EnderecoPrincipalUpdateDTO enderecoPrincipalUpdateDTO = new EnderecoPrincipalUpdateDTO(id);
+		Pessoa foundPessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
+		Endereco foundEndereco = new Endereco(id, "Rua Belém", "88160-396", "646", "Biguaçu", false, foundPessoa);
+		Endereco savedEndereco = new Endereco(id, "Rua Belém", "88160-396", "646", "Biguaçu", true, foundPessoa);
+		
+		Mockito.when(pessoaService.findById(id)).thenReturn(foundPessoa);
+		Mockito.when(enderecoRepository.findByIdAndPessoa(Mockito.anyLong(), Mockito.any(Pessoa.class))).thenReturn(Optional.of(foundEndereco));
+		Mockito.when(enderecoRepository.save(Mockito.any(Endereco.class))).thenReturn(savedEndereco);
+		
+		// Execução
+		EnderecoDTO savedEnderecoDto = org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> enderecoService.updateEnderecoPrincipalById(id, enderecoPrincipalUpdateDTO));
+				
+		// Verificação
+		Assertions.assertThat(savedEnderecoDto.getId()).isEqualTo(id);
+		Assertions.assertThat(savedEnderecoDto.getLogradouro()).isEqualTo("Rua Belém");
+		Assertions.assertThat(savedEnderecoDto.getCep()).isEqualTo("88160-396");
+		Assertions.assertThat(savedEnderecoDto.getNumero()).isEqualTo("646");
+		Assertions.assertThat(savedEnderecoDto.getCidade()).isEqualTo("Biguaçu");
+		Assertions.assertThat(savedEnderecoDto.getEnderecoPrincipal()).isEqualTo(true);
+		Mockito.verify(enderecoRepository, Mockito.times(1)).updateEnderecoPrincipalByPessoaExceptId(false, foundPessoa, id);
+	}
+	
+	@Test
 	@DisplayName("Deve atualizar o enderecoPrincipal de todos os endereços de uma pessoa, exceto o endereço com o id específico")
 	public void updateEnderecoPrincipalByPessoaExceptIdTest() {
 		// Cenário
@@ -103,5 +133,5 @@ public class EnderecoServiceTest {
 		// Verificação
 		Mockito.verify(enderecoRepository, Mockito.times(1)).updateEnderecoPrincipalByPessoaExceptId(false, pessoa, id);
 	}
-
+	
 }

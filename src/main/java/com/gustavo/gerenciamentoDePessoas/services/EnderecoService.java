@@ -1,15 +1,18 @@
 package com.gustavo.gerenciamentoDePessoas.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoDTO;
 import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoNewDTO;
+import com.gustavo.gerenciamentoDePessoas.dtos.EnderecoPrincipalUpdateDTO;
 import com.gustavo.gerenciamentoDePessoas.entities.Endereco;
 import com.gustavo.gerenciamentoDePessoas.entities.Pessoa;
 import com.gustavo.gerenciamentoDePessoas.repositories.EnderecoRepository;
+import com.gustavo.gerenciamentoDePessoas.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class EnderecoService {
@@ -39,10 +42,26 @@ public class EnderecoService {
 		return new EnderecoDTO(endereco);
 	}
 	
-	public List<EnderecoDTO> findByPessoa(Long id) {
-		Pessoa pessoa = pessoaService.findById(id);
+	public List<EnderecoDTO> findByPessoa(Long idPessoa) {
+		Pessoa pessoa = pessoaService.findById(idPessoa);
 		
 		return enderecoRepository.findByPessoa(pessoa).stream().map(obj -> new EnderecoDTO(obj)).collect(Collectors.toList());
+	}
+	
+	public EnderecoDTO updateEnderecoPrincipalById(Long idPessoa, EnderecoPrincipalUpdateDTO enderecoPrincipalUpdateDTO) {
+		Pessoa pessoa = pessoaService.findById(idPessoa);
+		
+		Optional<Endereco> optionalEndereco = enderecoRepository.findByIdAndPessoa(enderecoPrincipalUpdateDTO.getIdEndereco(), pessoa);
+		
+		Endereco endereco = optionalEndereco.orElseThrow(() -> new ObjectNotFoundException("A pessoa não possui o endereço informado! Id: " + enderecoPrincipalUpdateDTO.getIdEndereco() + ", Type: " + Endereco.class.getName()));
+		
+		endereco.setEnderecoPrincipal(true);
+		
+		updateEnderecoPrincipalByPessoaExceptId(false, pessoa, endereco.getId());
+		
+		endereco = enderecoRepository.save(endereco);
+		
+		return new EnderecoDTO(endereco);
 	}
 	
 	public void updateEnderecoPrincipalByPessoaExceptId(Boolean enderecoPrincipal, Pessoa pessoa, Long id) {

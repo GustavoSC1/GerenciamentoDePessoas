@@ -28,9 +28,13 @@ public class EnderecoService {
 		Pessoa pessoa = pessoaService.findById(idPessoa);
 		
 		Endereco endereco = new Endereco(null, enderecoDto.getLogradouro(), enderecoDto.getCep(), enderecoDto.getNumero(), 
-				enderecoDto.getCidade(), false, pessoa);
+				enderecoDto.getCidade(), enderecoDto.getEnderecoPrincipal(), pessoa);
 		
 		 endereco = enderecoRepository.save(endereco);
+		 
+		 if(endereco.getEnderecoPrincipal() == true) {
+			 enderecoRepository.updateEnderecoPrincipalByPessoaExceptId(false, pessoa, endereco.getId());
+		 }
 		
 		return new EnderecoDTO(endereco);
 	}

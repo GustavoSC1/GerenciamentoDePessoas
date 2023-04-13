@@ -63,8 +63,8 @@ public class PessoaController {
 	public ResponseEntity<Page<PessoaDTO>> findAll(
 												@RequestParam(value="page", defaultValue="0") Integer page,
 												@RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage,
-												@RequestParam(value="orderBy", defaultValue="date") String orderBy,
-												@RequestParam(value="direction", defaultValue="DESC") String direction) {
+												@RequestParam(value="orderBy", defaultValue="nome") String orderBy,
+												@RequestParam(value="direction", defaultValue="ASC") String direction) {
 		
 		Page<PessoaDTO> pessoaDto = pessoaService.findAll(page, linesPerPage, orderBy, direction);
 		

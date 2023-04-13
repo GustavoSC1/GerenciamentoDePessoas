@@ -42,15 +42,15 @@ public class EnderecoServiceTest {
 		// Cenário
 		Long id = 1l;
 		
-		EnderecoNewDTO newEndereco = new EnderecoNewDTO("Rua Belém", "88160-396", "646", "Biguaçu", false);		
+		EnderecoNewDTO newEndereco = new EnderecoNewDTO("Rua Belém", "88160-396", "646", "Biguaçu", true);		
 		Pessoa foundPessoa = new Pessoa(id, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));		
-		Endereco savedEndereco = new Endereco(id, "Rua Belém", "88160-396", "646", "Biguaçu", false, foundPessoa);
+		Endereco savedEndereco = new Endereco(id, "Rua Belém", "88160-396", "646", "Biguaçu", true, foundPessoa);
 		
 		Mockito.when(pessoaService.findById(id)).thenReturn(foundPessoa);
 		Mockito.when(enderecoRepository.save(Mockito.any(Endereco.class))).thenReturn(savedEndereco);
 		
 		// Execução
-		EnderecoDTO savedEnderecoDto = enderecoService.save(id, newEndereco);
+		EnderecoDTO savedEnderecoDto = org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> enderecoService.save(id, newEndereco));
 		
 		// Verificação
 		Assertions.assertThat(savedEnderecoDto.getId()).isEqualTo(id);
@@ -58,7 +58,8 @@ public class EnderecoServiceTest {
 		Assertions.assertThat(savedEnderecoDto.getCep()).isEqualTo("88160-396");
 		Assertions.assertThat(savedEnderecoDto.getNumero()).isEqualTo("646");
 		Assertions.assertThat(savedEnderecoDto.getCidade()).isEqualTo("Biguaçu");
-		Assertions.assertThat(savedEnderecoDto.getEnderecoPrincipal()).isEqualTo(false);
+		Assertions.assertThat(savedEnderecoDto.getEnderecoPrincipal()).isEqualTo(true);
+		Mockito.verify(enderecoRepository, Mockito.times(1)).updateEnderecoPrincipalByPessoaExceptId(false, foundPessoa, id);
 	}
 	
 	@Test
@@ -100,7 +101,7 @@ public class EnderecoServiceTest {
 		org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> enderecoService.updateEnderecoPrincipalByPessoaExceptId(false, pessoa, id));
 		
 		// Verificação
-		Mockito.verify(enderecoRepository, Mockito.times(1)).updateEnderecoPrincipalByPessoaExceptId(false, pessoa, id);;
+		Mockito.verify(enderecoRepository, Mockito.times(1)).updateEnderecoPrincipalByPessoaExceptId(false, pessoa, id);
 	}
 
 }

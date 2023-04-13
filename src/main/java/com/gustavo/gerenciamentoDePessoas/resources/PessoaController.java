@@ -89,7 +89,7 @@ public class PessoaController {
 	}
 	
 	@PatchMapping("/{idPessoa}/enderecos")
-	public ResponseEntity<EnderecoDTO> updateEnderecoPrincipalById(@PathVariable Long idPessoa, @RequestBody EnderecoPrincipalUpdateDTO enderecoPrincipalUpdateDTO) {
+	public ResponseEntity<EnderecoDTO> updateEnderecoPrincipalById(@PathVariable Long idPessoa, @Valid @RequestBody EnderecoPrincipalUpdateDTO enderecoPrincipalUpdateDTO) {
 		EnderecoDTO enderecoDto = enderecoService.updateEnderecoPrincipalById(idPessoa, enderecoPrincipalUpdateDTO);
 		
 		return ResponseEntity.ok().body(enderecoDto);				

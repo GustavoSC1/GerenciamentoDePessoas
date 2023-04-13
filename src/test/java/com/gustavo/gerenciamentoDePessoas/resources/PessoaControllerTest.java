@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -331,6 +330,29 @@ public class PessoaControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("numero").value("646"))
 				.andExpect(MockMvcResultMatchers.jsonPath("cidade").value("Biguaçu"))
 				.andExpect(MockMvcResultMatchers.jsonPath("enderecoPrincipal").value(true));
+	}
+	
+	@Test
+	@DisplayName("Deve lançar erro de validação quando não há dados suficientes para atualização do endereço principal")
+	public void updateInvalidEnderecoPrincipalTest() throws Exception {
+		// Cenário
+		Long id = 1l;
+		
+		EnderecoPrincipalUpdateDTO enderecoPrincipalUpdateDTO = new EnderecoPrincipalUpdateDTO();
+		
+		String json = mapper.writeValueAsString(enderecoPrincipalUpdateDTO);
+		
+		// Execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+				.patch(PESSOA_API.concat("/"+id+"/enderecos"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(json);		
+		
+		// Verificação
+		mvc.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+			.andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)));
 	}
 
 }

@@ -36,13 +36,13 @@ public class PessoaController {
 	private EnderecoService enderecoService;
 	
 	@PostMapping
-	public ResponseEntity<PessoaDTO> save(@Valid @RequestBody PessoaNewDTO pessoaNewDto) {
+	public ResponseEntity<Void> save(@Valid @RequestBody PessoaNewDTO pessoaNewDto) {
 		PessoaDTO pessoaDto = pessoaService.save(pessoaNewDto);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				 .buildAndExpand(pessoaDto.getId()).toUri();
 		
-		return ResponseEntity.created(uri).body(pessoaDto);
+		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")

@@ -19,12 +19,7 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
 	List<Endereco> findByPessoa(Pessoa pessoa);
 	
 	Optional<Endereco> findByIdAndPessoa(Long id, Pessoa pessoa);
-	
-	@Transactional
-    @Modifying()
-    @Query("update Endereco obj set obj.enderecoPrincipal = :enderecoPrincipal where obj.id = :id")
-	void updateEnderecoPrincipalById(@Param("enderecoPrincipal") Boolean enderecoPrincipal, @Param("id") Long id);
-	
+
 	@Transactional
     @Modifying
     @Query("update Endereco obj set obj.enderecoPrincipal = :enderecoPrincipal where obj.pessoa = :pessoa and obj.id != :id")

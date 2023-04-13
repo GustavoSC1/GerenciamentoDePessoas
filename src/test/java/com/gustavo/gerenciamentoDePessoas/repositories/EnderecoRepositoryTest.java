@@ -97,35 +97,7 @@ public class EnderecoRepositoryTest {
 		Assertions.assertThat(foundEndereco.get().getCep()).isEqualTo("88160-396");
 		Assertions.assertThat(foundEndereco.get().getEnderecoPrincipal()).isEqualTo(false);
 	}
-	
-	@Test
-	@DisplayName("Deve atualizar o campo enderecoPrincipal de um endereço")
-	public void updateEnderecoPrincipalByIdTest() {
-		// Cenário		
-		Pessoa pessoa = new Pessoa(null, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
 		
-		entityManager.persist(pessoa);
-		
-		Endereco endereco = new Endereco(null, "Rua Belém", "88160-396", "646", "Biguaçu", false, pessoa);
-		
-		entityManager.persist(endereco);
-		
-		// Execução
-		enderecoRepository.updateEnderecoPrincipalById(true, endereco.getId());
-		
-		// limpa o cache e força entityManager.find do banco de dados
-		entityManager.clear();
-		
-		Endereco foundEndereco = entityManager.find(Endereco.class, endereco.getId());
-		
-		// Verificação		
-		Assertions.assertThat(foundEndereco).isNotNull();
-		Assertions.assertThat(foundEndereco.getId()).isNotNull();
-		Assertions.assertThat(foundEndereco.getLogradouro()).isEqualTo("Rua Belém");
-		Assertions.assertThat(foundEndereco.getCep()).isEqualTo("88160-396");
-		Assertions.assertThat(foundEndereco.getEnderecoPrincipal()).isEqualTo(true);
-	}
-	
 	@Test
 	@DisplayName("Deve atualizar o enderecoPrincipal de todos os endereços de uma pessoa, exceto o endereço com o id específico")
 	public void updateEnderecoPrincipalByPessoaExceptIdTest() {
@@ -143,6 +115,7 @@ public class EnderecoRepositoryTest {
 		// Execução
 		enderecoRepository.updateEnderecoPrincipalByPessoaExceptId(false, pessoa, endereco1.getId());
 		
+		// limpa o cache e força entityManager.find do banco de dados
 		entityManager.clear();
 		
 		Endereco foundEndereco1 = entityManager.find(Endereco.class, endereco1.getId());

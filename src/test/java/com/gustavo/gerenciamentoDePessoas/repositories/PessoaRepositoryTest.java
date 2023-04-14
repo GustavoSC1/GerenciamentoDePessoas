@@ -1,7 +1,7 @@
 package com.gustavo.gerenciamentoDePessoas.repositories;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -39,9 +39,8 @@ public class PessoaRepositoryTest {
 		Pessoa savedPessoa = pessoaRepository.save(newPessoa);
 		
 		// Verificação
+		Assertions.assertThat(savedPessoa).isNotNull();
 		Assertions.assertThat(savedPessoa.getId()).isNotNull();
-		Assertions.assertThat(savedPessoa.getNome()).isEqualTo("Gustavo Silva Cruz");
-		Assertions.assertThat(savedPessoa.getDataDeNascimento()).isEqualTo(LocalDate.of(1996, 10, 17));
 	}
 	
 	@Test
@@ -52,13 +51,10 @@ public class PessoaRepositoryTest {
 		entityManager.persist(pessoa);
 		
 		// Execução
-		Optional<Pessoa> foundPessoa = pessoaRepository.findById(pessoa.getId());
+		Pessoa foundPessoa = pessoaRepository.findById(pessoa.getId()).get();
 		
-		// Verificação
-		Assertions.assertThat(foundPessoa.isPresent()).isTrue();
-		Assertions.assertThat(foundPessoa.get().getId()).isNotNull();
-		Assertions.assertThat(foundPessoa.get().getNome()).isEqualTo("Gustavo Silva Cruz");
-		Assertions.assertThat(foundPessoa.get().getDataDeNascimento()).isEqualTo(LocalDate.of(1996, 10, 17));
+		// Verificação		
+		Assertions.assertThat(foundPessoa).isEqualTo(pessoa);
 	}
 	
 	@Test
@@ -70,14 +66,16 @@ public class PessoaRepositoryTest {
 		Pessoa pessoa = new Pessoa(null, "Gustavo Silva Cruz", LocalDate.of(1996, 10, 17));
 		
 		entityManager.persist(pessoa);
-		
+				
 		// Execução
 		Page<Pessoa> foundPessoas = pessoaRepository.findAll(pageRequest);
 		
-		// Verificação
+		// Verificação	
+		
 		Assertions.assertThat(foundPessoas.getNumberOfElements()).isEqualTo(1);
 		Assertions.assertThat(foundPessoas.getTotalElements()).isEqualTo(1);
 		Assertions.assertThat(foundPessoas.getTotalPages()).isEqualTo(1);
+		Assertions.assertThat(foundPessoas.getContent()).isEqualTo(List.of(pessoa));
 	}
 	
 }

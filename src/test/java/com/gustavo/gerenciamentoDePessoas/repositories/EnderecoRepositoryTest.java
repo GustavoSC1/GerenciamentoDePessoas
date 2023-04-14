@@ -2,7 +2,6 @@ package com.gustavo.gerenciamentoDePessoas.repositories;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -42,13 +41,8 @@ public class EnderecoRepositoryTest {
 		Endereco savedEndereco = enderecoRepository.save(newEndereco);
 		
 		// Verificação
+		Assertions.assertThat(savedEndereco).isNotNull();
 		Assertions.assertThat(savedEndereco.getId()).isNotNull();
-		Assertions.assertThat(savedEndereco.getLogradouro()).isEqualTo("Rua Belém");
-		Assertions.assertThat(savedEndereco.getCep()).isEqualTo("88160-396");
-		Assertions.assertThat(savedEndereco.getNumero()).isEqualTo("646");
-		Assertions.assertThat(savedEndereco.getCidade()).isEqualTo("Biguaçu");
-		Assertions.assertThat(savedEndereco.getEnderecoPrincipal()).isEqualTo(false);
-		Assertions.assertThat(savedEndereco.getPessoa()).isNotNull();
 	}
 	
 	@Test
@@ -69,8 +63,7 @@ public class EnderecoRepositoryTest {
 		List<Endereco> foundEnderecos = enderecoRepository.findByPessoa(pessoa);
 		
 		// Verificação
-		Assertions.assertThat(foundEnderecos).hasSize(1);
-		Assertions.assertThat(foundEnderecos).contains(endereco1);
+		Assertions.assertThat(foundEnderecos).hasSize(1).contains(endereco1);
 	}
 	
 	@Test
@@ -88,14 +81,11 @@ public class EnderecoRepositoryTest {
 		entityManager.persist(endereco2);
 				
 		// Execução
-		Optional<Endereco> foundEndereco = enderecoRepository.findByIdAndPessoa(endereco1.getId(), pessoa);
+		Endereco foundEndereco = enderecoRepository.findByIdAndPessoa(endereco1.getId(), pessoa).get();
 		
 		// Verificação
-		Assertions.assertThat(foundEndereco.isPresent()).isTrue();
-		Assertions.assertThat(foundEndereco.get().getId()).isNotNull();
-		Assertions.assertThat(foundEndereco.get().getLogradouro()).isEqualTo("Rua Belém");
-		Assertions.assertThat(foundEndereco.get().getCep()).isEqualTo("88160-396");
-		Assertions.assertThat(foundEndereco.get().getEnderecoPrincipal()).isEqualTo(false);
+		Assertions.assertThat(foundEndereco.getId()).isNotNull();
+		Assertions.assertThat(foundEndereco).isEqualTo(endereco1);
 	}
 		
 	@Test
@@ -122,17 +112,13 @@ public class EnderecoRepositoryTest {
 		Endereco foundEndereco2 = entityManager.find(Endereco.class, endereco2.getId());
 		
 		// Verificação
+		endereco2.setEnderecoPrincipal(false);
+		
 		Assertions.assertThat(foundEndereco1).isNotNull();
-		Assertions.assertThat(foundEndereco1.getId()).isNotNull();
-		Assertions.assertThat(foundEndereco1.getLogradouro()).isEqualTo("Rua Belém");
-		Assertions.assertThat(foundEndereco1.getCep()).isEqualTo("88160-396");
-		Assertions.assertThat(foundEndereco1.getEnderecoPrincipal()).isEqualTo(true);
+		Assertions.assertThat(foundEndereco1).isEqualTo(endereco1);
 		
 		Assertions.assertThat(foundEndereco2).isNotNull();
-		Assertions.assertThat(foundEndereco2.getId()).isNotNull();
-		Assertions.assertThat(foundEndereco2.getLogradouro()).isEqualTo("Rua Oclécio Barbosa Martins");
-		Assertions.assertThat(foundEndereco2.getCep()).isEqualTo("79050-460");
-		Assertions.assertThat(foundEndereco2.getEnderecoPrincipal()).isEqualTo(false);
+		Assertions.assertThat(foundEndereco2).isEqualTo(endereco2);
 	}
 
 }

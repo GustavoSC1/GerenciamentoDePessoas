@@ -25,6 +25,8 @@ import com.gustavo.gerenciamentoDePessoas.dtos.PessoaNewDTO;
 import com.gustavo.gerenciamentoDePessoas.services.EnderecoService;
 import com.gustavo.gerenciamentoDePessoas.services.PessoaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -38,6 +40,10 @@ public class PessoaController {
 	private EnderecoService enderecoService;
 	
 	@PostMapping
+	@Operation(description = "Criar uma pessoa", responses = {
+			@ApiResponse(responseCode = "201", description = "Pessoa salva com sucesso"),
+			@ApiResponse(responseCode = "422", description = "Erro de validação dos dados")
+	})
 	public ResponseEntity<Void> save(@Valid @RequestBody PessoaNewDTO pessoaNewDto) {
 		PessoaDTO pessoaDto = pessoaService.save(pessoaNewDto);
 		
@@ -48,6 +54,11 @@ public class PessoaController {
 	}
 	
 	@PutMapping("/{id}")
+	@Operation(description = "Editar uma pessoa", responses = {
+			@ApiResponse(responseCode = "200", description = "Pessoa editada com sucesso"),
+			@ApiResponse(responseCode = "404", description = "Não foi possível encontrar a pessoa solicitada"),
+			@ApiResponse(responseCode = "422", description = "Erro de validação ddos dados")
+	})
 	public ResponseEntity<PessoaDTO> update(@PathVariable Long id, @Valid @RequestBody PessoaNewDTO pessoaNewDto) {
 		PessoaDTO pessoaDto = pessoaService.update(id, pessoaNewDto);
 		
@@ -55,6 +66,10 @@ public class PessoaController {
 	}
 	
 	@GetMapping("/{id}")
+	@Operation(description = "Consultar uma pessoa", responses = {
+			@ApiResponse(responseCode = "200", description = "Pessoa obtida com sucesso"),
+			@ApiResponse(responseCode = "404", description = "Não foi possível encontrar a pessoa solicitada")
+	})
 	public ResponseEntity<PessoaDTO> find(@PathVariable Long id) {
 		PessoaDTO pessoaDto = pessoaService.find(id);
 		
@@ -62,6 +77,9 @@ public class PessoaController {
 	}
 	
 	@GetMapping
+	@Operation(description = "Listar as pessoas", responses = {
+			@ApiResponse(responseCode = "200", description = "Pessoas encontradas com sucesso")
+	})
 	public ResponseEntity<Page<PessoaDTO>> findAll(
 												@RequestParam(value="page", defaultValue="0") Integer page,
 												@RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage,
@@ -74,6 +92,11 @@ public class PessoaController {
 	}
 	
 	@PostMapping("/{idPessoa}/enderecos")
+	@Operation(description = "Criar endereço para pessoa", responses = {
+			@ApiResponse(responseCode = "200", description = "Endereco salvo com sucesso"),
+			@ApiResponse(responseCode = "404", description = "Não foi possível encontrar a pessoa solicitada"),
+			@ApiResponse(responseCode = "422", description = "Erro de validação de dados")
+	})
 	public ResponseEntity<EnderecoDTO> saveEndereco(@PathVariable Long idPessoa, @Valid @RequestBody EnderecoNewDTO enderecoNewDto) {
 		EnderecoDTO enderecoDto = enderecoService.save(idPessoa, enderecoNewDto);
 		
@@ -81,6 +104,10 @@ public class PessoaController {
 	}
 	
 	@GetMapping("/{idPessoa}/enderecos")
+	@Operation(description = "Listar endereços da pessoa", responses = {
+			@ApiResponse(responseCode = "200", description = "Endereços encontrados com sucesso"),			
+			@ApiResponse(responseCode = "404", description = "Não foi possível encontrar a pessoa solicitada")
+	})
 	// Resolvi utilizar List ao invés de Page porque geralmente uma pessoa não tem muitos endereços
 	public ResponseEntity<List<EnderecoDTO>> findEnderecoByPessoa(@PathVariable Long idPessoa) {
 		List<EnderecoDTO> list = enderecoService.findByPessoa(idPessoa);
@@ -89,6 +116,10 @@ public class PessoaController {
 	}
 	
 	@PatchMapping("/{idPessoa}/enderecos")
+	@Operation(description = "Informar qual endereço é o principal da pessoa", responses = {
+			@ApiResponse(responseCode = "200", description = "Endereço principal alterado com sucesso"),			
+			@ApiResponse(responseCode = "404", description = "Não foi possível encontrar a pessoa ou o endereço solicitado"),
+	})
 	public ResponseEntity<EnderecoDTO> updateEnderecoPrincipalById(@PathVariable Long idPessoa, @Valid @RequestBody EnderecoPrincipalUpdateDTO enderecoPrincipalUpdateDTO) {
 		EnderecoDTO enderecoDto = enderecoService.updateEnderecoPrincipalById(idPessoa, enderecoPrincipalUpdateDTO);
 		
